@@ -5,7 +5,7 @@ define site_define (
 	$nginx_base_dir			= hiera('nginx_base_dir'),
 	$ensure					= 'enable',
 	$listen_ip				= '*',
-	$listen_port			= hiera('OPENRESTY_LISTEN_PORT'),
+	$listen_port			= hiera('openresty_listen_port'),
 	$server_name			= [$name],
 	$www_root				= undef,
 	$log_access				= "/var/log/nginx/${name}access.log",

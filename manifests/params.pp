@@ -7,7 +7,7 @@ class openresty::params {
 	$worker_connections   = "1024"
 	$worker_rlimit        = "8192"
 	$keepalive_timeout    = "15"
-	$port                 = "80"
+	$port                 = hiera('openresty_listen_port')
 	$gzip                 = undef
 	$client_max_body_size = "10M"
 	$nginx_base_dir       = hiera('nginx_base_dir')
