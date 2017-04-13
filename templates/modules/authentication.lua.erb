@@ -1,0 +1,36 @@
+
+authentication = {}
+
+function authentication.authenticate_user(username, password)
+    ngx.header["content-type"] = 'application/x-www-form-urlencoded'
+    local authenticationResult = ngx.location.capture('/api/authentication',
+        { method = ngx.HTTP_POST, body = 'username=' .. username .. '&password=' .. password })
+
+    if authenticationResult.status ~= ngx.HTTP_OK then
+        ngx.log(ngx.WARN,
+            'Rejected authentication attempt. Status :' ..
+                    authenticationResult.status ..
+                    ' Reason: ' ..
+                    authenticationResult.body)
+
+        ngx.header["X-Frame-Options"] = 'sameorigin'
+        ngx.header["X-XSS-Protection"] = '1'
+        ngx.header["X-Content-Type-Options"] = 'nosniff'
+
+        if authenticationResult.status ~= ngx.HTTP_BAD_REQUEST then
+            ngx.exit(500)
+        end
+        ngx.log(ngx.NOTICE, 'User ' .. username .. ' failed authentication')
+
+        return false, ""
+    end
+
+    local callerId = authenticationResult.body
+
+    ngx.log(ngx.INFO, 'callerId returned by Authentication microservice is: ' .. callerId)
+
+    return true, callerId
+
+end
+
+return authentication

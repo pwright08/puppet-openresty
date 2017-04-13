@@ -1,0 +1,88 @@
+cjson = require("cjson");
+account = require('conf/modules/account');
+
+local session = {}
+
+function session.add_user_to_session(sessionkey, username)
+
+    local user = account.get_user(username);
+
+    local sessionUser = {
+        first_name = user["first_name"],
+        surname = user["surname"],
+        email = user["email"],
+        roles = user["roles"],
+        organisation = user["organisation"],
+        status = user["status"]
+    }
+
+    local body = cjson.encode(sessionUser)
+
+    ngx.log(ngx.INFO, 'Adding user information for user: ' .. username .. ' to session: ' .. sessionkey)
+
+    ngx.header["content-type"] = 'application/json'
+
+    local sessionStateResult = ngx.location.capture('/api/sessions/' .. sessionkey .. '/state/user', {method = ngx.HTTP_PUT, body = body})
+
+    if sessionStateResult.status ~= ngx.HTTP_CREATED and sessionStateResult.status ~= ngx.HTTP_NO_CONTENT then
+        ngx.log(ngx.WARN, 'Could not add user information to session. Status :' .. sessionStateResult.status)
+        ngx.header["X-Frame-Options"] = 'sameorigin'
+        ngx.header["X-XSS-Protection"] = '1'
+        ngx.header["X-Content-Type-Options"] = 'nosniff'
+        ngx.exit(500)
+    end
+end
+
+function session.create_session(userid)
+    ngx.req.clear_header('content-type')
+    ngx.header["content-type"] = 'text/plain'
+
+    -- Call Session microservice to create a new session for the authenticated user
+    local sessionPostResult = ngx.location.capture('/api/sessions', {method = ngx.HTTP_POST, body = userid})
+
+    if sessionPostResult.status ~= ngx.HTTP_CREATED then
+        ngx.log(ngx.ERR, 'Failed to acquire new session token from Session microservice. Status : ' .. sessionPostResult.status)
+
+        ngx.header["X-Frame-Options"] = 'sameorigin'
+        ngx.header["X-XSS-Protection"] = '1'
+        ngx.header["X-Content-Type-Options"] = 'nosniff'
+
+        ngx.exit(500)
+    end
+
+    local sessionToken = sessionPostResult.body;
+    ngx.log(ngx.INFO, 'Got session token from Session microservice: ' .. sessionToken)
+
+    return sessionToken
+end
+
+function session.expire_session(accessToken)
+
+    ngx.req.clear_header("Accept-Encoding")
+
+    local sessionsDeleteResult = ngx.location.capture('/api/sessions/' .. accessToken, { method = ngx.HTTP_DELETE });
+
+    if sessionsDeleteResult.status ~= 200 then
+        ngx.log(ngx.WARN, 'Nginx was unable to delete '.. accessToken ..' from Sessions microservice')
+    end
+end
+
+function session.valid(accessToken)
+    local acceptEncodingHeaderTemp = ngx.req.get_headers()["Accept-Encoding"]
+    ngx.req.clear_header("Accept-Encoding")
+
+    local sessionsResult = ngx.location.capture('/api/sessions/' .. accessToken, { method = ngx.HTTP_GET });
+    local callerId = sessionsResult.body;
+    ngx.req.set_header('Accept-Encoding', acceptEncodingHeaderTemp)
+
+    print(ngx.INFO, 'sessionsResult.status = ' .. sessionsResult.status)
+
+    if sessionsResult.status ~= ngx.HTTP_OK then
+        ngx.log(ngx.WARN, 'Nginx was unable to get callerId for '.. accessToken ..' from Sessions microservice')
+        return false , ""
+    end
+
+    return true, callerId
+end
+
+return session

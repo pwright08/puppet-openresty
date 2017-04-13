@@ -1,0 +1,33 @@
+cookie = {}
+
+function cookie.create_new_cookie(name, value, time)
+    local new_cookie = "" .. name .. "=" .. value .. "; path=/; HttpOnly;"
+
+    if ngx.var.scheme == "https" then
+        new_cookie = new_cookie .. " secure;"
+    end
+
+    if time then
+        new_cookie = new_cookie .. "expires=" .. time .. ";"
+    end
+
+    local cookies = ngx.header.set_cookie
+    if cookies then
+        if type(cookies) ~= "table" then
+            cookies = {cookies}
+        end
+        table.insert(cookies, new_cookie)
+    else
+        cookies = {new_cookie}
+    end
+
+    ngx.header.set_cookie = cookies
+end
+
+
+function cookie.expire_cookie(name)
+    cookie.create_new_cookie(name, '', ngx.cookie_time(ngx.time() - 1))
+end
+
+
+return cookie

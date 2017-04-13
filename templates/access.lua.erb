@@ -1,0 +1,59 @@
+session = require('conf/modules/session');
+cookie = require('conf/modules/cookie');
+
+-- Check against list of non-protected endpoints
+if  string.find(ngx.var.uri, "/login_frontend/.*$") or
+    string.find(ngx.var.uri, "^/account/.*$") or
+    ngx.var.uri == "/account_management_frontend/health" or
+    ngx.var.uri == "/page-not-found" or
+    ngx.var.uri == "/error" or
+    ngx.var.uri == "/logout" or
+    string.find(ngx.var.uri, "^/static/.*$") then
+    return
+end
+
+ngx.log(ngx.NOTICE, 'BEGIN access.lua for ' .. ngx.var.uri)
+
+local accessToken = ngx.var.cookie_AccessToken
+
+if not accessToken then
+  ngx.log(ngx.WARN, 'No access token!')
+
+  ngx.header["X-Frame-Options"] = 'sameorigin'
+  ngx.header["X-XSS-Protection"] = '1'
+  ngx.header["X-Content-Type-Options"] = 'nosniff'
+
+  if string.find(ngx.var.uri, "^/login") then
+      return
+  end
+
+  cookie.create_new_cookie("Location", ngx.var.uri, ngx.cookie_time(ngx.time() + 300))
+
+  return ngx.redirect('/login')
+end
+
+ngx.log(ngx.INFO, 'accessToken: ' .. accessToken)
+
+local valid, callerId = session.valid(accessToken);
+
+if valid == false then
+  ngx.header["X-Frame-Options"] = 'sameorigin'
+  ngx.header["X-XSS-Protection"] = '1'
+  ngx.header["X-Content-Type-Options"] = 'nosniff'
+
+  if string.find(ngx.var.uri, "^/login") then
+      return
+  end
+
+  cookie.create_new_cookie("Location", ngx.var.uri, ngx.cookie_time(ngx.time() + 300))
+
+  return ngx.redirect('/login')
+end
+
+ngx.log(ngx.INFO, 'Successfully verified session for request, callerId = ' .. callerId)
+
+ngx.req.set_header('callerId', callerId)
+
+if string.find(ngx.var.uri, "^/login") then
+  return ngx.redirect('/')
+end

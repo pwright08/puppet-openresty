@@ -1,0 +1,19 @@
+session = require('conf/modules/session');
+cookie = require('conf/modules/cookie');
+
+ngx.log(ngx.NOTICE, 'BEGIN logout.lua')
+
+local accessToken = ngx.var.cookie_AccessToken
+
+if not accessToken then
+  return ngx.redirect('/login')
+end
+
+ngx.log(ngx.INFO, 'accessToken: ' .. accessToken)
+
+session.expire_session(accessToken)
+
+-- remove cookie even if failed to expire server so user can create a new session if they wish
+cookie.expire_cookie("AccessToken")
+
+return ngx.redirect('/login')

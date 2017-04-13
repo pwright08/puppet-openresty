@@ -1,0 +1,49 @@
+session = require('conf/modules/session');
+authentication = require('conf/modules/authentication');
+cookie = require('conf/modules/cookie');
+
+
+ngx.log(ngx.INFO, 'BEGIN handle_login.lua')
+-- Call Authentication microservice to check users credentials
+ngx.req.read_body()
+
+local params = ngx.req.get_post_args()
+local username = params["username"]
+local password = params["password"]
+
+if username == '' or password == '' then
+  return
+end
+
+local authenticated, callerId = authentication.authenticate_user(username, password);
+
+if authenticated == false then
+  return
+end
+
+local sessionToken = session.create_session(callerId)
+
+session.add_user_to_session(sessionToken, callerId)
+
+-- Create a cookie for the session so future requests from this users session can be verified
+cookie.create_new_cookie("AccessToken", sessionToken, nil)
+
+ngx.log(ngx.NOTICE, 'User ' .. callerId .. ' successfully logged in')
+
+local returnurl = ngx.var.cookie_Location
+if returnurl then
+  returnurl = returnurl:gsub('"', '')
+  cookie.expire_cookie("Location")
+
+  if not string.find(returnurl, "^/.*$") then
+    returnurl = '/' .. returnurl
+  end
+
+  ngx.log(ngx.INFO, 'Redirecting to ' .. returnurl)
+  return ngx.redirect(returnurl)
+end
+
+ngx.log(ngx.INFO, 'Redirecting to root url')
+return ngx.redirect('/')
+
+
