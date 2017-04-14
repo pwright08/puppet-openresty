@@ -1,6 +1,5 @@
 class openresty::params {
-	$openresty_url        = hiera('openresty_url')
-	$luasocket_url        = hiera('luasocket_url')
+	$openresty_version    = hiera('openresty_version')
 	$https                = true
 	$user                 = "nobody nogroup"
 	$worker_processes     = "1"
