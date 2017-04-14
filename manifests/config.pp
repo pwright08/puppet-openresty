@@ -13,7 +13,7 @@ class openresty::config inherits openresty::params {
   # }
 
   file {
-    'fastcgi.conf':
+  'fastcgi.conf':
     ensure => file,
     path => "${nginx_base_dir}/conf/fastcgi.conf",
     content => template("openresty/fastcgi.conf.erb"),
@@ -59,4 +59,13 @@ class openresty::config inherits openresty::params {
     content => template('openresty/nginx.conf.erb'),
     require => Class['openresty::package'];
   }
+
+
+  file { '/usr/local/openresty/nginx/conf/nginx.conf':
+    ensure => 'link',
+    target => "${nginx_base_dir}/conf/nginx.conf",
+    force => true,
+    require => File['nginx.conf'];
+  }
+
 }
