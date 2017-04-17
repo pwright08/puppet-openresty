@@ -8,9 +8,10 @@
 
         resolver 127.0.0.11;
 
-        access_by_lua_file 'access.lua';
+        access_by_lua_file '<%= @nginx_base_dir %>/conf/access.lua';
 
         error_page 401 /login;
+        error_page 403 /not-authorised;
         error_page 404 /page-not-found;
         error_page 500 /error;
 
