@@ -10,4 +10,5 @@ class openresty::params {
 	$gzip                 = undef
 	$client_max_body_size = "10M"
 	$nginx_base_dir       = hiera('nginx_base_dir')
+
 }
