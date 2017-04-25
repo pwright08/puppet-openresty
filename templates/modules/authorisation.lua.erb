@@ -1,0 +1,21 @@
+cjson = require("cjson");
+
+local authorisation = {}
+
+function authorisation.get_permissions(username)
+    ngx.log(ngx.INFO, 'Getting permissions for user: ' .. username)
+
+    local result = ngx.location.capture('/api/permissions/' .. username, { method = ngx.HTTP_GET });
+
+    if result.status ~= ngx.HTTP_OK then
+        ngx.log(ngx.WARN, 'Could not get user permissions. Status :' .. result.status)
+        ngx.header["X-Frame-Options"] = 'sameorigin'
+        ngx.header["X-XSS-Protection"] = '1'
+        ngx.header["X-Content-Type-Options"] = 'nosniff'
+        return cjson.decode("[]")
+    end
+    return cjson.decode(result.body)
+
+end
+
+return authorisation

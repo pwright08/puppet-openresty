@@ -12,6 +12,7 @@ class openresty::config inherits openresty::params {
   #   require => Class['openresty::package'];
   # }
 
+
   file {
   'fastcgi.conf':
     ensure => file,
@@ -27,6 +28,11 @@ class openresty::config inherits openresty::params {
     ensure => file,
     path => "${nginx_base_dir}/conf/modules/authentication.lua",
     content => template('openresty/modules/authentication.lua.erb'),
+    require => Class['openresty::package'];
+  'authorisation.lua':
+    ensure => file,
+    path => "${nginx_base_dir}/conf/modules/authorisation.lua",
+    content => template('openresty/modules/authorisation.lua.erb'),
     require => Class['openresty::package'];
   'cookie.lua':
     ensure => file,
