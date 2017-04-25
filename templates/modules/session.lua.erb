@@ -1,11 +1,13 @@
 cjson = require("cjson");
 account = require('<%= @nginx_base_dir %>/conf/modules/account');
+authorisation = require('<%= @nginx_base_dir %>/conf/modules/authorisation');
 
 local session = {}
 
 function session.add_user_to_session(sessionkey, username)
 
     local user = account.get_user(username);
+    local permissions = authorisation.get_permissions(username);
 
     local sessionUser = {
         first_name = user["first_name"],
@@ -13,7 +15,8 @@ function session.add_user_to_session(sessionkey, username)
         email = user["email"],
         roles = user["roles"],
         organisation = user["organisation"],
-        status = user["status"]
+        status = user["status"],
+        permissions = permissions
     }
 
     local body = cjson.encode(sessionUser)
