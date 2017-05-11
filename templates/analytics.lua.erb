@@ -1,4 +1,4 @@
-local analyticsId = <%= @google_analytics_id %>
+local analyticsId = '<%= @google_analytics_id %>'
 
 if analyticsId and string.len(analyticsId) > 0 then
     local chunk = ngx.arg[1]
