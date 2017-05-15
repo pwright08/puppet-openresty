@@ -1,17 +1,4 @@
-
 class openresty::config inherits openresty::params {
-
-
-  # $openresty_files = [ "fastcgi.conf", "nginx.conf",]
-
-
-  # file { $openresty_files:
-  #   ensure => file,
-  #   path => "${nginx_base_dir}/conf/modules/${openresty_files}",
-  #   content => template("openresty/modules/${openresty_files}"),
-  #   require => Class['openresty::package'];
-  # }
-
 
   file {
   'fastcgi.conf':
@@ -58,6 +45,11 @@ class openresty::config inherits openresty::params {
     ensure => file,
     path => "${nginx_base_dir}/conf/logout.lua",
     content => template('openresty/logout.lua.erb'),
+    require => Class['openresty::package'];
+  'analytics.lua':
+    ensure => file,
+    path => "${nginx_base_dir}/conf/analytics.lua",
+    content => template('openresty/analytics.lua.erb'),
     require => Class['openresty::package'];
   'nginx.conf':
     ensure => file,

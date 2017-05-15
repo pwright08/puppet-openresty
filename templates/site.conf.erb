@@ -9,6 +9,9 @@
         resolver 127.0.0.11;
 
         access_by_lua_file '<%= @nginx_base_dir %>/conf/access.lua';
+        
+        header_filter_by_lua 'ngx.header.content_length = nil';
+        body_filter_by_lua_file '<%= @nginx_base_dir %>/conf/analytics.lua';
 
         error_page 401 /login;
         error_page 403 /not-authorised;
