@@ -10,7 +10,7 @@ class openresty::package inherits openresty::params {
   }
 
   package { 'openresty':
-    ensure  => "${openresty_version}",
+    ensure  => "${llc_openresty_version}",
     require => Yumrepo['OpenRestyRepository'];
   }
 
