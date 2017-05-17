@@ -20,7 +20,10 @@ function authentication.authenticate_user(username, password)
         if authenticationResult.status ~= ngx.HTTP_BAD_REQUEST then
             ngx.exit(500)
         end
+        
         ngx.log(ngx.NOTICE, 'User ' .. username .. ' failed authentication')
+
+        ngx.req.set_header("authentication-status", authenticationResult.body)
 
         return false, ""
     end
