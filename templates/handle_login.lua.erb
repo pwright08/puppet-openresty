@@ -1,6 +1,6 @@
-session = require('<%= @llc_nginx_base_dir %>/conf/modules/session');
-authentication = require('<%= @llc_nginx_base_dir %>/conf/modules/authentication');
-cookie = require('<%= @llc_nginx_base_dir %>/conf/modules/cookie');
+session = require('<%= @nginx_base_dir %>/conf/modules/session');
+authentication = require('<%= @nginx_base_dir %>/conf/modules/authentication');
+cookie = require('<%= @nginx_base_dir %>/conf/modules/cookie');
 
 
 ngx.log(ngx.INFO, 'BEGIN handle_login.lua')
