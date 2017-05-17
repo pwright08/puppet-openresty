@@ -10,8 +10,8 @@ class openresty (
  }
   class { 'openresty::site': }
 
-  $openresty_dirs = [ "${llc_nginx_base_dir}", "${llc_nginx_base_dir}/conf/", 
-    "${llc_nginx_base_dir}/conf/modules", "${llc_nginx_base_dir}/conf/conf.d", "${llc_nginx_base_dir}/conf/sites", "/var/log/nginx/"]
+  $openresty_dirs = [ "${nginx_base_dir}", "${nginx_base_dir}/conf/", 
+    "${nginx_base_dir}/conf/modules", "${nginx_base_dir}/conf/conf.d", "${nginx_base_dir}/conf/sites", "/var/log/nginx/"]
 
   file { $openresty_dirs:
     ensure => 'directory',
