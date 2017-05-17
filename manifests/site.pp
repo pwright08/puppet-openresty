@@ -2,10 +2,10 @@ class openresty::site {
 
 define site_define (
 	$enable_auto_index     = hiera('nginx::enable_auto_index', 'false'),
-	$nginx_base_dir        = hiera('nginx_base_dir'),
+	$nginx_base_dir        = hiera('llc_nginx_base_dir'),
 	$ensure                = 'enable',
 	$listen_ip             = '*',
-	$listen_port           = hiera('openresty_listen_port'),
+	$listen_port           = hiera('llc_openresty_listen_port'),
 	$server_name           = [$name],
 	$www_root              = undef,
 	$log_access            = "/var/log/nginx/${name}access.log",

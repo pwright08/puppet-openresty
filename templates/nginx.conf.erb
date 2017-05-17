@@ -18,7 +18,7 @@ http {
     include    /usr/local/openresty/nginx/conf/mime.types;
     charset utf-8;
 
-    include <%= @nginx_base_dir %>/conf/conf.d/*.cnf;
-    include <%= @nginx_base_dir %>/conf/sites/*.conf;
+    include <%= @llc_nginx_base_dir %>/conf/conf.d/*.cnf;
+    include <%= @llc_nginx_base_dir %>/conf/sites/*.conf;
 }
 
