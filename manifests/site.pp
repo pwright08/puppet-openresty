@@ -21,7 +21,6 @@ define site_define (
 	file {"site_${name}.conf":
 		path    => "${nginx_base_dir}/conf/sites/site_${name}.conf",
 		ensure  => present,
-		purge   => true,
 		content => template('openresty/site.conf.erb'),
 		notify  => Service['openresty'],
 	}
