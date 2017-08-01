@@ -11,4 +11,5 @@ class openresty::params {
 	$client_max_body_size = "10M"
 	$nginx_base_dir       = hiera('llc_nginx_base_dir')
 	$google_analytics_id  = hiera('google_analytics_id', undef)
+	$manage_repo          = hiera('llc_openresty_manage_repo', true)
 }
