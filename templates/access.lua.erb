@@ -9,6 +9,7 @@ if  string.find(ngx.var.uri, "^/login_frontend/.*$") or
     ngx.var.uri == "/not-authorised" or
     ngx.var.uri == "/error" or
     ngx.var.uri == "/logout" or
+    ngx.var.uri == "/search_llc" or
     ngx.var.uri == "/report/report-informations.csv" or
     string.find(ngx.var.uri, "^/static/.*$") then
     return
