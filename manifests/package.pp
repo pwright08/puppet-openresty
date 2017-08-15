@@ -8,7 +8,8 @@ class openresty::package inherits openresty::params {
       baseurl  => 'https://copr-be.cloud.fedoraproject.org/results/openresty/openresty/epel-$releasever-$basearch/',
       enabled  => 1,
       gpgcheck => 1,
-      gpgkey   => 'https://copr-be.cloud.fedoraproject.org/results/openresty/openresty/pubkey.gpg'
+      gpgkey   => 'https://copr-be.cloud.fedoraproject.org/results/openresty/openresty/pubkey.gpg',
+      before   =>  Package[openresty]
     }
   }
 
