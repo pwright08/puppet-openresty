@@ -6,8 +6,9 @@
         listen <%= @listen_ip %>:<%= @listen_port %>;
         lua_code_cache off;
 
-        resolver 127.0.0.11;
-
+        <% if @nginx_resolver %>
+                resolver <%= @nginx_resolver %>;
+        <% end %>
         access_by_lua_file '<%= @nginx_base_dir %>/conf/access.lua';
         
         header_filter_by_lua 'ngx.header.content_length = nil';

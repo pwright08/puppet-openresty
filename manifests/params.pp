@@ -12,4 +12,5 @@ class openresty::params {
 	$nginx_base_dir       = hiera('llc_nginx_base_dir')
 	$google_analytics_id  = hiera('google_analytics_id', undef)
 	$manage_repo          = hiera('llc_openresty_manage_repo', true)
+	$nginx_resolver       = hiera('nginx_resolver', undef)
 }
