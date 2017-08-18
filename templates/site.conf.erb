@@ -7,7 +7,7 @@
         lua_code_cache off;
 
         <% if @nginx_resolver %>
-                resolver <% @nginx_resolver %>;
+                resolver <%= @nginx_resolver %>;
         <% end %>
         access_by_lua_file '<%= @nginx_base_dir %>/conf/access.lua';
         
