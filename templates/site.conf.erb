@@ -6,7 +6,7 @@
         listen <%= @listen_ip %>:<%= @listen_port %>;
         lua_code_cache off;
 
-        <% if @nginx_resolver %>
+        <% if @nginx_resolver && !@nginx_resolver.empty? %>
                 resolver <%= @nginx_resolver %>;
         <% end %>
         access_by_lua_file '<%= @nginx_base_dir %>/conf/access.lua';
