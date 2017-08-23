@@ -31,6 +31,11 @@ class openresty::config inherits openresty::params {
     path => "${nginx_base_dir}/conf/modules/session.lua",
     content => template('openresty/modules/session.lua.erb'),
     require => Class['openresty::package'];
+  'geoserver_token.lua':
+    ensure => file,
+    path => "${nginx_base_dir}/conf/modules/geoserver_token.lua",
+    content => template('openresty/modules/geoserver_token.lua.erb'),
+    require => Class['openresty::package'];
   'access.lua':
     ensure => file,
     path => "${nginx_base_dir}/conf/access.lua",
@@ -50,6 +55,11 @@ class openresty::config inherits openresty::params {
     ensure => file,
     path => "${nginx_base_dir}/conf/analytics.lua",
     content => template('openresty/analytics.lua.erb'),
+    require => Class['openresty::package'];
+  'check_geotoken.lua':
+    ensure => file,
+    path => "${nginx_base_dir}/conf/check_geotoken.lua",
+    content => template('openresty/check_geotoken.lua.erb'),
     require => Class['openresty::package'];
   'nginx.conf':
     ensure => file,
