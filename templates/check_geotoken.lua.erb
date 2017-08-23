@@ -14,7 +14,7 @@ if match then
   if geoserver_token.check_token(accessToken, geoToken) then
      ngx.log(ngx.INFO, "Geotoken valid")
      authorised = true
-     uri = ngx.re.sub(uri, "/" .. geoToken, "")Add 
+     uri = ngx.re.sub(uri, "/" .. geoToken, "")
   end     
 end
 
