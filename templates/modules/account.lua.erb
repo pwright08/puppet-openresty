@@ -2,10 +2,10 @@ cjson = require("cjson");
 
 local account = {}
 
-function account.get_user(username)
-    ngx.log(ngx.INFO, 'Getting user information for user: ' .. username)
+function account.get_user(userid)
+    ngx.log(ngx.INFO, 'Getting user information for user: ' .. userid)
 
-    local usersResult = ngx.location.capture('/api/users/' .. username, { method = ngx.HTTP_GET });
+    local usersResult = ngx.location.capture('/api/users/' .. userid, { method = ngx.HTTP_GET });
 
     if usersResult.status ~= ngx.HTTP_OK then
         ngx.log(ngx.WARN, 'Could not get user information. Status :' .. usersResult.status)

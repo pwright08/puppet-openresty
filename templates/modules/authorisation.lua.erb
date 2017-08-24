@@ -2,10 +2,10 @@ cjson = require("cjson");
 
 local authorisation = {}
 
-function authorisation.get_permissions(username)
-    ngx.log(ngx.INFO, 'Getting permissions for user: ' .. username)
+function authorisation.get_permissions(userid)
+    ngx.log(ngx.INFO, 'Getting permissions for id: ' .. userid)
 
-    local result = ngx.location.capture('/api/permissions/' .. username, { method = ngx.HTTP_GET });
+    local result = ngx.location.capture('/api/permissions/' .. userid, { method = ngx.HTTP_GET });
 
     if result.status ~= ngx.HTTP_OK then
         ngx.log(ngx.WARN, 'Could not get user permissions. Status :' .. result.status)

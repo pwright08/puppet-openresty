@@ -4,12 +4,13 @@ authorisation = require('<%= @nginx_base_dir %>/conf/modules/authorisation');
 
 local session = {}
 
-function session.add_user_to_session(sessionkey, username)
+function session.add_user_to_session(sessionkey, userid)
 
-    local user = account.get_user(username);
-    local permissions = authorisation.get_permissions(username);
+    local user = account.get_user(userid);
+    local permissions = authorisation.get_permissions(userid);
 
     local sessionUser = {
+        id = userid,
         first_name = user["first_name"],
         surname = user["surname"],
         email = user["email"],
@@ -21,7 +22,7 @@ function session.add_user_to_session(sessionkey, username)
 
     local body = cjson.encode(sessionUser)
 
-    ngx.log(ngx.INFO, 'Adding user information for user: ' .. username .. ' to session: ' .. sessionkey)
+    ngx.log(ngx.INFO, 'Adding user information for user: ' .. userid .. ' to session: ' .. sessionkey)
 
     ngx.header["content-type"] = 'application/json'
 
